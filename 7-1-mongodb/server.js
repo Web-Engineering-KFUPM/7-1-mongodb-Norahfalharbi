@@ -171,21 +171,51 @@ import mongoose from "mongoose";
 
 // establish connection
 
+// Replace this with your actual password (without < >)
+const password = encodeURIComponent("1234567890"); // encodes safely if needed
+
+const uri = `mongodb+srv://dbuser01:${password}@cluster0.6zcemw4.mongodb.net/mydatabase?retryWrites=true&w=majority`;
+
+mongoose.connect(uri)
+  .then(() => console.log("✅ MongoDB connected successfully"))
+  .catch(err => console.error("❌ Connection error:", err));
+
 
 // define schema
-
+ const studentSchema = new mongoose.Schema({
+         name: String,
+         age: Number,
+         major: String
+      });
+      const Student = mongoose.model("Student", studentSchema);
 
 // create document
-
+async function createStudents() {
+      await Student.insertMany([
+         { name: "Ali", age: 21, major: "CS" },
+         { name: "Sara", age: 23, major: "SE" }
+      ]);
+      console.log("✅ Inserted");
+      }
+      createStudents();
 
 // read document
 
-
+async function readStudents() {
+         const all = await Student.find();
+         console.log(all);
+      }
+      readStudents();
 // update document
-
-
+async function updateStudent() {
+         await Student.updateOne({ name: "Ali" }, { age: 22 });
+         console.log("✅ Updated Ali");
+      }
+updateStudent()
 // delete document
 
-
-
-
+async function deleteStudent() {
+         await Student.deleteOne({ name: "Sara" });
+      console.log("✅ Deleted Sara");
+      }
+deleteStudent() 
